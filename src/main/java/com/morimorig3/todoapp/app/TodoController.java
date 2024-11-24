@@ -1,6 +1,11 @@
 package com.morimorig3.todoapp.app;
 
 import com.morimorig3.todoapp.domain.model.Todo;
+import com.morimorig3.todoapp.domain.repository.TodoRepository;
+import com.morimorig3.todoapp.domain.service.TodoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -10,24 +15,27 @@ import java.util.List;
 @RequestMapping("/api/todos")
 public class TodoController {
 
+    @Autowired
+    TodoService todoService;
+
     @GetMapping
     public List<Todo> getTodos(){
-        // TODO: リスト取得処理
-        List<Todo> todoList =  new ArrayList<>();
-        return todoList;
+        return todoService.getTodos();
     }
 
     @GetMapping(path = "{id}")
-    public Todo getTodo(@PathVariable String id){
-        // TODO: 個別取得処理
-        Todo todo = new Todo();
-        return todo;
+    public Todo getTodo(@PathVariable Integer id){
+        return todoService.getTodoById(id);
     }
 
     @PostMapping
-    public Todo addTodo(){
-        // TODO: 新規追加処理
-        Todo todo = new Todo();
+    public Todo addTodo(
+            @Validated @RequestBody Todo todo, BindingResult bindingResult
+    ){
+        if(bindingResult.hasErrors()){
+            System.out.println("hasErrors");
+        }
+        todoService.addTodo(todo);
         return todo;
     }
 
