@@ -1,14 +1,14 @@
 package com.morimorig3.todoapp.app;
 
+import com.morimorig3.todoapp.advice.ApiExceptionHandler;
+import com.morimorig3.todoapp.advice.NotFoundException;
 import com.morimorig3.todoapp.domain.model.Todo;
-import com.morimorig3.todoapp.domain.repository.TodoRepository;
 import com.morimorig3.todoapp.domain.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,6 +25,10 @@ public class TodoController {
 
     @GetMapping(path = "{id}")
     public Todo getTodo(@PathVariable Integer id){
+        Todo todo = todoService.getTodoById(id);
+        if(todo == null){
+            throw new NotFoundException(id + "が見つかりませんでした");
+        }
         return todoService.getTodoById(id);
     }
 
@@ -33,7 +37,7 @@ public class TodoController {
             @Validated @RequestBody Todo todo, BindingResult bindingResult
     ){
         if(bindingResult.hasErrors()){
-            System.out.println("hasErrors");
+            System.out.println("bindingResult.hasErrors");
         }
         todoService.addTodo(todo);
         return todo;
