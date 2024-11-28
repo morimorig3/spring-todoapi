@@ -1,5 +1,6 @@
 package com.morimorig3.todoapp.domain.service;
 
+import com.morimorig3.todoapp.advice.NotFoundException;
 import com.morimorig3.todoapp.domain.model.Todo;
 import com.morimorig3.todoapp.domain.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,6 @@ public class TodoService {
     @Transactional
     public Todo getTodoById(Integer id){
         Todo todo = todoRepository.findById(id).orElse(null);
-        if(todo == null){
-            System.out.println("error handling");
-        }
         return todo;
     }
 
@@ -31,5 +29,18 @@ public class TodoService {
     public Todo addTodo(Todo todo){
         todoRepository.save(todo);
         return todo;
+    }
+
+
+    @Transactional
+    public Todo updateTodo(Integer id,Todo todo){
+        todo.setId(id);
+        todoRepository.save(todo);
+        return todo;
+    }
+
+    @Transactional
+    public void deleteTodo(Integer id){
+        todoRepository.deleteById(id);
     }
 }

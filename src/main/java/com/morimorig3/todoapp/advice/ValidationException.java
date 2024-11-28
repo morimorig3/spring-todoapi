@@ -1,14 +1,11 @@
 package com.morimorig3.todoapp.advice;
 
-import lombok.Data;
-
 import java.io.Serial;
 
-public class NotFoundException extends RuntimeException {
+public class ValidationException extends RuntimeException {
     @Serial
     private static final long serialVersionUID = 1L;
-
-    public NotFoundException(String message) {
+    public ValidationException(String message) {
         super(message);
     }
 }

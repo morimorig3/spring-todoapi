@@ -11,17 +11,17 @@ public class ApiError implements Serializable {
         @Serial
         private static final long serialVersionUID = 1L;
 
-        private HttpStatusCode statusCode;
+        private Integer statusCode;
         private String message;
 
-        public HttpStatusCode getStatusCode() {
+        public Integer getStatusCode() {
             return statusCode;
         }
         public String getMessage() {
             return message;
         }
         public void setStatusCode(HttpStatusCode statusCode) {
-            this.statusCode = statusCode;
+            this.statusCode = statusCode.value();
         }
         public void setMessage(String message) {
             this.message = message;

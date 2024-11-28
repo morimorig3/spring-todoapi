@@ -2,10 +2,12 @@ package com.morimorig3.todoapp.app;
 
 import com.morimorig3.todoapp.advice.ApiExceptionHandler;
 import com.morimorig3.todoapp.advice.NotFoundException;
+import com.morimorig3.todoapp.advice.ValidationException;
 import com.morimorig3.todoapp.domain.model.Todo;
 import com.morimorig3.todoapp.domain.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +29,9 @@ public class TodoController {
     public Todo getTodo(@PathVariable Integer id){
         Todo todo = todoService.getTodoById(id);
         if(todo == null){
-            throw new NotFoundException(id + "が見つかりませんでした");
+            throw new NotFoundException("Todo is not found.");
         }
-        return todoService.getTodoById(id);
+        return todo;
     }
 
     @PostMapping
@@ -37,17 +39,35 @@ public class TodoController {
             @Validated @RequestBody Todo todo, BindingResult bindingResult
     ){
         if(bindingResult.hasErrors()){
-            System.out.println("bindingResult.hasErrors");
+            String errorMessages = "";
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                errorMessages += error.getDefaultMessage();
+            }
+            throw new ValidationException(errorMessages);
         }
         todoService.addTodo(todo);
         return todo;
     }
 
     @PutMapping(path = "{id}")
-    public Todo updateTodo(){
-        // TODO: 更新処理
-        Todo todo = new Todo();
-        return todo;
+    public Todo updateTodo(
+            @PathVariable Integer id,
+            @Validated @RequestBody Todo requestTodo,
+            BindingResult bindingResult){
+        Todo todo = todoService.getTodoById(id);
+        // NotFoundエラー
+        if(todo == null){
+            throw new NotFoundException("Todo is not found.");
+        }
+        // バリデーションエラー
+        if(bindingResult.hasErrors()){
+            String errorMessages = "";
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                errorMessages += error.getDefaultMessage();
+            }
+            throw new ValidationException(errorMessages);
+        }
+        return todoService.updateTodo(id, requestTodo);
     }
 
     @DeleteMapping(path = "{id}")

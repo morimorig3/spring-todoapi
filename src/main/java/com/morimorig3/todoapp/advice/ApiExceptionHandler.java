@@ -25,7 +25,15 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({NotFoundException.class})
     public ResponseEntity<Object> handleNotFoundException(
             NotFoundException ex, WebRequest request) {
-        HttpStatus status = HttpStatus.NOT_FOUND;
+        HttpStatusCode status = HttpStatus.NOT_FOUND;
+        ApiError apiError = new ApiError(status, ex.getMessage());
+        return handleExceptionInternal(ex, apiError, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler({ValidationException.class})
+    public ResponseEntity<Object> handleNotFoundException(
+            ValidationException ex, WebRequest request) {
+        HttpStatusCode status = HttpStatus.BAD_REQUEST;
         ApiError apiError = new ApiError(status, ex.getMessage());
         return handleExceptionInternal(ex, apiError, new HttpHeaders(), status, request);
     }

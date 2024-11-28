@@ -15,7 +15,7 @@ public class Todo implements Serializable {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
 
-    @NotEmpty(message = "内容を入力してください")
+    @NotEmpty(message = "Input contents are empty.")
     private String text;
 
     public Todo(){}
