@@ -1,6 +1,6 @@
 package com.morimorig3.todoapp.advice;
 
-import com.morimorig3.todoapp.advice.ApiError;
+import com.morimorig3.todoapp.advice.ApiErrorResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -16,7 +16,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleExceptionInternal(
             Exception ex, Object body, HttpHeaders headers,
             HttpStatusCode status, WebRequest request) {
-        ApiError apiError = new ApiError(status, ex.getMessage());
+        ApiErrorResponse apiError = new ApiErrorResponse(status, ex.getMessage());
         return super.handleExceptionInternal(
                 ex,apiError,headers,status,request
         );
@@ -26,7 +26,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleNotFoundException(
             NotFoundException ex, WebRequest request) {
         HttpStatusCode status = HttpStatus.NOT_FOUND;
-        ApiError apiError = new ApiError(status, ex.getMessage());
+        ApiErrorResponse apiError = new ApiErrorResponse(status, ex.getMessage());
         return handleExceptionInternal(ex, apiError, new HttpHeaders(), status, request);
     }
 
@@ -34,7 +34,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleNotFoundException(
             ValidationException ex, WebRequest request) {
         HttpStatusCode status = HttpStatus.BAD_REQUEST;
-        ApiError apiError = new ApiError(status, ex.getMessage());
+        ApiErrorResponse apiError = new ApiErrorResponse(status, ex.getMessage());
         return handleExceptionInternal(ex, apiError, new HttpHeaders(), status, request);
     }
 }

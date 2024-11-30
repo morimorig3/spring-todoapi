@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatusCode;
 import java.io.Serial;
 import java.io.Serializable;
 
-public class ApiError implements Serializable {
+public class ApiErrorResponse implements Serializable {
 
     private static class Error implements Serializable{
         @Serial
@@ -33,7 +33,7 @@ public class ApiError implements Serializable {
         return error;
     }
 
-    public ApiError(HttpStatusCode statusCode, String message){
+    public ApiErrorResponse(HttpStatusCode statusCode, String message){
         this.error = new Error();
         this.error.setStatusCode(statusCode);
         this.error.setMessage(message);
