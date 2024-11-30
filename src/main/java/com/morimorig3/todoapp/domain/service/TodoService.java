@@ -20,8 +20,11 @@ public class TodoService {
     }
 
     @Transactional
-    public Todo getTodoById(Integer id){
+    public Todo getTodo(Integer id){
         Todo todo = todoRepository.findById(id).orElse(null);
+        if(todo == null){
+            throw new NotFoundException("Todo is not found.");
+        }
         return todo;
     }
 
@@ -34,6 +37,9 @@ public class TodoService {
 
     @Transactional
     public Todo updateTodo(Integer id,Todo todo){
+        if(!todoRepository.existsById(id)){
+            throw new NotFoundException("Todo is not found.");
+        }
         todo.setId(id);
         todoRepository.save(todo);
         return todo;
@@ -41,6 +47,9 @@ public class TodoService {
 
     @Transactional
     public void deleteTodo(Integer id){
+        if(!todoRepository.existsById(id)){
+            throw new NotFoundException("Todo is not found.");
+        }
         todoRepository.deleteById(id);
     }
 }

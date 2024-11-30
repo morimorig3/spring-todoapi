@@ -1,6 +1,5 @@
 package com.morimorig3.todoapp.app;
 
-import com.morimorig3.todoapp.advice.ApiExceptionHandler;
 import com.morimorig3.todoapp.advice.NotFoundException;
 import com.morimorig3.todoapp.advice.ValidationException;
 import com.morimorig3.todoapp.domain.model.Todo;
@@ -27,7 +26,7 @@ public class TodoController {
 
     @GetMapping(path = "{id}")
     public Todo getTodo(@PathVariable Integer id){
-        Todo todo = todoService.getTodoById(id);
+        Todo todo = todoService.getTodo(id);
         if(todo == null){
             throw new NotFoundException("Todo is not found.");
         }
@@ -54,11 +53,6 @@ public class TodoController {
             @PathVariable Integer id,
             @Validated @RequestBody Todo requestTodo,
             BindingResult bindingResult){
-        Todo todo = todoService.getTodoById(id);
-        // NotFoundエラー
-        if(todo == null){
-            throw new NotFoundException("Todo is not found.");
-        }
         // バリデーションエラー
         if(bindingResult.hasErrors()){
             String errorMessages = "";
@@ -71,8 +65,7 @@ public class TodoController {
     }
 
     @DeleteMapping(path = "{id}")
-    public Void deleteTodo(){
-        // TODO: 削除処理
-        return null;
+    public void deleteTodo(@PathVariable Integer id){
+        todoService.deleteTodo(id);
     }
 }
